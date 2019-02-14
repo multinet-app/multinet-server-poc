@@ -12,4 +12,4 @@ services:
     container_name: gremlin-server
     ports:
       - "8182:8182"
-    command: ["conf/gremlin-server.yaml"]
+    command: ["conf/gremlin-server-modern-py.yaml"]

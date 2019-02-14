@@ -15,7 +15,7 @@ nose = "*"
 pyyaml = "*"
 gremlinpython = "==3.3.1"
 aiohttp = "*"
-aiogremlin = {ref = "master", git = "https://github.com/davebshow/aiogremlin.git", editable = true}
+aiogremlin = {ref = "master", git = "https://github.com/mildewey/aiogremlin.git", editable = true}
 
 
 [requires]

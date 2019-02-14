@@ -1,6 +1,6 @@
 from aiohttp import web, ClientSession
 
-from gremlinparser import parse_response
+from aiogremlin import DriverRemoteConnection, Graph
 
 import json
 import logging
@@ -8,9 +8,9 @@ logger = logging.getLogger(__name__)
 
 async def index(request):
     logger.debug('Accessing index')
-    async with ClientSession() as session:
-        resp = await session.post("http://localhost:8182", data=json.dumps(dict(gremlin="system.graphs()")))
-        raw_data = await resp.json()
-        data = parse_response(raw_data)
-        logger.info('Response: %s' % data)
-    return web.Response(text=json.dumps(data, indent=4))
+    remote_connection = await DriverRemoteConnection.open('ws://localhost:8182/gremlin', 'graph')
+    g = Graph().traversal().withRemote(remote_connection)
+    vertices = await g.V().toList()
+    vertices = [str(v) for v in vertices]
+    logger.info('Response: %s' % vertices)
+    return web.Response(text=json.dumps(vertices, indent=4))
