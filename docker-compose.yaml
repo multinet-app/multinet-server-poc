@@ -7,9 +7,12 @@ services:
       - "8080:8080"
     volumes:
       - /tmp/multinet/logs:/var/multinet/logs/
-  gremlin-server:
-    image: tinkerpop/gremlin-server:3.3
-    container_name: gremlin-server
+  arangodb:
+    image: arangodb/arangodb:3.4.3
+    container_name: arangodb
     ports:
-      - "8182:8182"
-    command: ["conf/gremlin-server-modern-py.yaml"]
+      - "8529:8529"
+    volumes:
+      - ./data:/data
+    environment:
+      - ARANGO_ROOT_PASSWORD=${ARANGO_ROOT_PASSWORD:-openSesame}
