@@ -1,2 +1,2 @@
 [logging]
-  config: '/etc/multinet/logging.conf'
+  level: DEBUG

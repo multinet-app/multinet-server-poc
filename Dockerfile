@@ -6,8 +6,8 @@ RUN pip install pipenv
 COPY Pipfile ./
 RUN pipenv install
 
-WORKDIR /config
-ENV MULTINET_SERVER_CONFIG_DIR /config
+WORKDIR /etc/multinet
+ENV MULTINET_SERVER_CONFIG_DIR /etc/multinet
 COPY config .
 
 VOLUME /var/multinet/logs/
