@@ -5,6 +5,10 @@ logger = logging.getLogger(__name__)
 
 from aiohttp import web, ClientSession
 
+from schema import schema
+from graphql import graphql
+from graphql.execution.executors.asyncio import AsyncioExecutor
+
 async def index(request):
     logger.debug('Accessing index')
     client = request.app['arango']
@@ -143,3 +147,12 @@ async def getEdges(request):
     documents = [doc for doc in cursor]
 
     return web.Response(text=json.dumps(documents[0:5], indent=4))
+
+async def graph(request):
+    logger.debug('Executing GraphQL request')
+    client = request.app['arango']
+    query = await request.text()
+    logger.debug(query)
+    result = graphql(schema, query, context=dict(arango=client))
+    logger.debug(result.data)
+    return web.json_response(dict(data=result.data))

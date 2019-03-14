@@ -13,3 +13,4 @@ def setup_routes(app):
     app.router.add_post('/vertices/{db_name}/{graph_name}/{name}', views.addVertices)
     app.router.add_get('/edges/{db_name}/{graph_name}/{name}', views.getEdges)
     app.router.add_post('/edges/{db_name}/{graph_name}/{name}', views.addEdges)
+    app.router.add_post('/graph', views.graph)

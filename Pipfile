@@ -1,22 +1,16 @@
 [[source]]
-
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [dev-packages]
-
 nose = "*"
 
-
 [packages]
-
 pyyaml = "*"
 aiohttp = "*"
 python-arango = "*"
-
+graphql-core = "*"
 
 [requires]
-
 python_version = "3.6"
