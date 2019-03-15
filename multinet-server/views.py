@@ -151,5 +151,8 @@ async def graph(request):
     logger.debug('Executing GraphQL request')
     client = request.app['arango']
     query = await request.text()
-    result = await graphql(schema, query)
-    return web.json_response(dict(data=result.data))
+    result = await graphql(schema, query, context_value=dict(client=client))
+    errors= [error.message for error in result.errors] if result.errors else []
+    for error in errors:
+        logger.warning(error)
+    return web.json_response(dict(data=result.data, errors=errors))
