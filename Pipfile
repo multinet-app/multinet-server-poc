@@ -10,7 +10,8 @@ nose = "*"
 pyyaml = "*"
 aiohttp = "*"
 python-arango = "*"
-graphql-core = "*"
+graphql-core-next = "*"
+httplib = "*"
 
 [requires]
 python_version = "3.6"

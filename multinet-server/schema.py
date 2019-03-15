@@ -1,36 +1,22 @@
 import logging
 logger = logging.getLogger(__name__)
 
-import models
+import resolvers
 
-from graphql import (
-    GraphQLSchema,
-    GraphQLObjectType,
-    GraphQLField,
-    GraphQLString,
-    GraphQLList
-)
+from graphql import build_schema
 
-node = GraphQLObjectType(
-  name='Node',
-  fields={
-    'id': GraphQLField(
-      type=GraphQLString,
-      resolver=models.node_id
-    )
-  }
-)
-
-schema = GraphQLSchema(
-  query=GraphQLObjectType(
-    name='RootQueryType',
-    fields={
-      'allNodes': GraphQLField(
-        type=GraphQLList(node),
-        resolver=models.allNodes
-      )
+schema = build_schema("""
+    type Query {
+        allNodes(graph: String!, id: String=""): [Node!]!
     }
-  )
-  # mutation=GraphQLObjectType(...),
-  # subscription=GraphQLObjectType(...)
-)
+
+    type Node {
+        key: String!
+    }
+""")
+
+fields = schema.query_type.fields
+fields['allNodes'].resolve = resolvers.allNodes
+
+fields = schema.get_type('Node').fields
+resolvers.meta_resolve_dict(fields, 'key', alias='_key')
