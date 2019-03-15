@@ -32,7 +32,7 @@ async def allEdges(root, info, graph, id):
   info.context['graph'] = db_name
 
   cursor = coll.all()
-  edges = [edge for edge in cursor][0:5]
+  edges = [edge for edge in cursor]
   return edges
 
 async def edgeSource(edge, info):
