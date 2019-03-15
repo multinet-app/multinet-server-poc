@@ -13,6 +13,8 @@ schema = build_schema("""
 
     type Node {
         key: String!
+        outgoing(edges: [String]): [Edge!]
+        incoming(edges: [String]): [Edge!]
     }
 
     type Edge {
@@ -55,6 +57,8 @@ fields['allEdges'].resolve = resolvers.allEdges
 
 fields = schema.get_type('Node').fields
 resolvers.meta_resolve_dict(fields, 'key', alias='_key')
+fields['outgoing'].resolve = resolvers.nodeOutgoing
+fields['incoming'].resolve = resolvers.nodeIncoming
 
 resolvers.meta_resolve_dict(fields, 'name')
 resolvers.meta_resolve_dict(fields, 'city')
