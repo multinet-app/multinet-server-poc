@@ -11,21 +11,28 @@ schema = build_schema("""
         allEdges(graph: String!, id: String=""): [Edge!]!
     }
 
+    interface Attributes {
+        key: String
+    }
+
     type Node {
         key: String!
         outgoing(edges: [String]): [Edge!]
         incoming(edges: [String]): [Edge!]
+        attributes: Attributes!
     }
 
     type Edge {
         key: String!
         source: Node!
         target: Node!
+        attributes: Attributes!
     }
 """)
 
 schema = extend_schema(schema, parse("""
-    extend type Node {
+    type airports implements Attributes {
+        key: String
         name: String
         city: String
         state: String
@@ -35,7 +42,8 @@ schema = extend_schema(schema, parse("""
         vip: Boolean
     }
 
-    extend type Edge {
+    type flights implements Attributes {
+        key: String
         Year: Int
         Month: Int
         Day: Int
@@ -55,11 +63,16 @@ fields = schema.query_type.fields
 fields['allNodes'].resolve = resolvers.allNodes
 fields['allEdges'].resolve = resolvers.allEdges
 
+schema.get_type('Attributes').resolve_type = lambda entity, *_: entity['_id'].split('/')[0]
+
 fields = schema.get_type('Node').fields
 resolvers.meta_resolve_dict(fields, 'key', alias='_key')
 fields['outgoing'].resolve = resolvers.nodeOutgoing
 fields['incoming'].resolve = resolvers.nodeIncoming
+fields['attributes'].resolve = resolvers.attributes
 
+fields = schema.get_type('airports').fields
+resolvers.meta_resolve_dict(fields, 'key', alias='_key')
 resolvers.meta_resolve_dict(fields, 'name')
 resolvers.meta_resolve_dict(fields, 'city')
 resolvers.meta_resolve_dict(fields, 'state')
@@ -72,7 +85,10 @@ fields = schema.get_type('Edge').fields
 resolvers.meta_resolve_dict(fields, 'key', alias='_key')
 fields['source'].resolve = resolvers.edgeSource
 fields['target'].resolve = resolvers.edgeTarget
+fields['attributes'].resolve = resolvers.attributes
 
+fields = schema.get_type('flights').fields
+resolvers.meta_resolve_dict(fields, 'key', alias='_key')
 resolvers.meta_resolve_dict(fields, 'Year')
 resolvers.meta_resolve_dict(fields, 'Month')
 resolvers.meta_resolve_dict(fields, 'Day')

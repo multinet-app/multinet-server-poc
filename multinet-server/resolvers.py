@@ -60,3 +60,6 @@ async def nodeIncoming(node, info, edges):
     edgeColls = [graph.edge_collection(collName) for collName in edges]
     edges = [edge for edgeColl in edgeColls for edge in edgeColl.edges(node['_id'], direction='in')['edges']]
     return edges
+
+async def attributes(entity, info):
+    return entity
